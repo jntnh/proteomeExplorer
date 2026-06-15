@@ -5,6 +5,28 @@ import matplotlib.pyplot as plt
 from threading import RLock
 from PIL import Image
 import io
+import hmac
+
+
+def check_password():
+    def password_entered():
+        if hmac.compare_digest(st.session_state["password"], st.secrets["password"]):
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if st.session_state.get("password_correct", False):
+        return True
+
+    st.text_input("Passwort", type="password", on_change=password_entered, key="password")
+    if "password_correct" in st.session_state:
+        st.error("😕 Passwort falsch")
+    return False
+
+
+if not check_password():
+    st.stop()
 
 _lock = RLock()
 pixel_limit = 2 * Image.MAX_IMAGE_PIXELS
@@ -33,7 +55,7 @@ def valid_figure_size(width, height, dpi, pixel_limit):
 data = pd.read_csv(
     "data/pivot_fc_and_p_fdr.csv", 
     index_col=0, 
-    header=[0,1, 2]
+    header=[0, 1, 2]
 )
 
 data = data.drop(columns=[('p-value_FDR', 'sum_significant', 'Unnamed: 11_level_2')])
@@ -153,10 +175,10 @@ with st.expander('Figure settings'):
     height_per_item = st.number_input('Figure height per item:', 0.0, None, 0.6)
 
 if len(selected) == 0:
-    st.warning('No matches for your filter preferences. Heatmap cannot be generated.', icon="⚠️")
+    st.error('No matches for your filter preferences. Heatmap cannot be generated.', icon="⚠️")
 
 elif not valid_figure_size(width, height_per_item*len(selected), dpi, pixel_limit):
-    st.warning('Your Heatmap is too large and cannot be generated. Reduce the number of selected items or adjust figure properties (width, height or dpi)', icon="⚠️")
+    st.error('Your Heatmap is too large and cannot be generated. Reduce the number of selected items or adjust figure properties (width, height or dpi)', icon="⚠️")
 
 else:
     with _lock:
