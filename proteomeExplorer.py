@@ -28,6 +28,8 @@ def check_password():
 if not check_password():
     st.stop()
 
+DATA_PATH = "data/pivot_fc_and_p_fdr.csv"
+
 _lock = RLock()
 pixel_limit = 2 * Image.MAX_IMAGE_PIXELS
 
@@ -53,8 +55,8 @@ def valid_figure_size(width, height, dpi, pixel_limit):
         return False
 
 data = pd.read_csv(
-    "data/pivot_fc_and_p_fdr.csv", 
-    index_col=0, 
+    DATA_PATH,
+    index_col=0,
     header=[0, 1, 2]
 )
 
