@@ -1,6 +1,6 @@
 # ProteomeExplorer
 
-Interactive Streamlit app for exploring TDP-43 proteomics data with interactive filtering and visualization.
+Interactive Streamlit app for exploring TDP-43 proteomics data of different tissues with interactive filtering and visualization.
 
 ## Features
 
@@ -60,11 +60,11 @@ The app expects a CSV file at the path defined by `DATA_PATH` in `proteomeExplor
 
 Example:
 ```
-                FC                                    p-value_FDR
-              CSF  CTX         SPC                  CSF  CTX         SPC
-              CSF  insoluble soluble               CSF  insoluble soluble
-GENE1         0.5    1.2       -0.3              0.01  0.001      0.05
-GENE2         NaN    0.8        0.4              NaN   0.02       0.03
+               FC                                  p-value_FDR
+               CSF    CTX        SPC               CSF   CTX         SPC
+               CSF    insoluble  soluble           CSF   insoluble   soluble
+GENE1          0.5    1.2        -0.3              0.01  0.001       0.05
+GENE2          NaN    0.8        0.4               NaN   0.02        0.03
 ```
 
 ## Usage
