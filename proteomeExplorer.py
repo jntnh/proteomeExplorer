@@ -62,8 +62,9 @@ data = pd.read_csv(
 
 data = data.drop(columns=[('p-value_FDR', 'sum_significant', 'Unnamed: 11_level_2')])
 
-with st.sidebar:
-    st.markdown('*Hallo*')
+# Possible Sidebar
+#with st.sidebar:
+#    st.markdown('*Hallo*')
 
 st.title("Explore TDP-Proteome")
 'Mithilfe dieses Tools können verschiedene Filtereinstellungen vorgenommen werden. Anhand dieser Kriterien wird anschließend eine Heatmap erstellt, welche die log2 Fold-Changes in den verschiedenen Geweben/Biomaterialien anzeigt.'
@@ -88,7 +89,7 @@ notna_threshold = st.number_input("In how many tissue fractions must the protein
 
 fdr_threshold = st.slider(
     "Maximum FDR",
-    min_value=0.001,
+    min_value=0.01,
     max_value=0.1,
     value=0.05
 )
@@ -105,10 +106,17 @@ only_sig = st.checkbox(
     value=True
 )
 
-only_stars = st.checkbox(
-    "Hide detailed p-values (show only significance stars)",
-    value=True
-)
+
+
+st.markdown('## Heatmap')
+with st.expander('Figure settings'):
+    only_stars = st.checkbox(
+        "Hide detailed p-values (show only significance stars)",
+        value=True
+    )
+    dpi = st.number_input('Figure dpi:', 50, 600, 150)
+    width = st.number_input('Figure width:', 0, None, 8)
+    height_per_item = st.number_input('Figure height per item:', 0.0, None, 0.6)
 
 fc = data["FC"]
 pvals = data["p-value_FDR"]
@@ -170,11 +178,6 @@ for row in fc.loc[selected.index].index:
                     f"p={p_val:.2g} {stars(p_val)}"
                 )
 
-st.markdown('## Heatmap')
-with st.expander('Figure settings'):
-    dpi = st.number_input('Figure dpi:', 50, 600, 150)
-    width = st.number_input('Figure width:', 0, None, 8)
-    height_per_item = st.number_input('Figure height per item:', 0.0, None, 0.6)
 
 if len(selected) == 0:
     st.error('No matches for your filter preferences. Heatmap cannot be generated.', icon="⚠️")
